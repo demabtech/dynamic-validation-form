@@ -1,20 +1,112 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<div class="container">
+  <div class="py-5 text-center">
+    <h2>Validación dinamica - Formularios reactivos</h2>
+  </div>
 
+  <div class="row">
+    <div class="col-md-12 order-md-1">
+      <form class="needs-validation" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label for="identificationType">Tipo de Identificación</label>
+            <select class="custom-select d-block w-100" id="identificationType" formControlName="identificationType"
+              required #identification [ngClass]="{ 'is-invalid': submitted && f.identificationType.errors }" (change)="setKindPerson()">
+              <option value="CD">Cedula de Ciudadania</option>
+              <option value="CE">Cedula de Extranjeria</option>
+              <option value="NIT">NIT</option>
+              <option value="TI">Tarjeta de Identidad</option>
+              <option value="PP">Pasaporte</option>
+            </select>
+            <div class="invalid-feedback" *ngIf="submitted && f.identificationType.invalid">
+              <div *ngIf="f.identificationType.errors.required">
+                Este campo es requerido
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="identificationNumber">Número Identificación</label>
+            <input type="text" class="form-control" id="identificationNumber" placeholder=""
+              formControlName="identificationNumber" required
+              [ngClass]="{ 'is-invalid': submitted && f.identificationNumber.errors }">
+            <div class="invalid-feedback" *ngIf="submitted && f.identificationNumber.invalid">
+              <div *ngIf="f.identificationNumber.errors.required">
+                Este campo es requerido
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="kindPerson">Tipo de Persona</label>
+            <select class="custom-select d-block w-100" id="kindPerson" formControlName="kindPerson" required
+              [ngClass]="{ 'is-invalid': submitted && f.kindPerson.errors }">
+              <option value="PN">Persona Natural</option>
+              <option value="PJ">Persona Juridica</option>
+            </select>
+            <div class="invalid-feedback" *ngIf="submitted && f.kindPerson.invalid">
+              <div *ngIf="f.kindPerson.errors.required">
+                Este campo es requerido
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="identification.value !== 'NIT'">
+          <div class="col-md-6 mb-3">
+            <label for="firstName">Nombres</label>
+            <input type="text" class="form-control" id="firstName" placeholder="" formControlName="firstName" required
+              [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }">
+            <div class="invalid-feedback" *ngIf="submitted && f.firstName.invalid">
+              <div *ngIf="f.firstName.errors.required">
+                Este campo es requerido
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="lastName">Apellidos</label>
+            <input type="text" class="form-control" id="lastName" placeholder="" formControlName="lastName" required
+              [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }">
+            <div class="invalid-feedback" *ngIf="submitted && f.lastName.invalid">
+              <div *ngIf="f.lastName.errors.required">
+                Este campo es requerido
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="identification.value === 'NIT'">
+          <div class="col-md-12 mb-3">
+            <label for="businessName">Razon Social</label>
+            <input type="text" class="form-control" id="businessName" placeholder="" formControlName="businessName"
+              required [ngClass]="{ 'is-invalid': submitted && f.businessName.errors }">
+            <div class="invalid-feedback" *ngIf="submitted && f.businessName.invalid">
+              <div *ngIf="f.businessName.errors.required">
+                Este campo es requerido
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="email">Email <span class="text-muted">(Optional)</span></label>
+          <input type="email" class="form-control" id="email" placeholder="you@example.com" formControlName="email"
+            [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+          <div class="invalid-feedback" *ngIf="submitted && f.email.invalid">
+            <div *ngIf="f.email.errors.email">
+              Ingrese un email valido
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="address">Dirección</label>
+          <input type="text" class="form-control" id="address" placeholder="1234 Main St" formControlName="address"
+            required [ngClass]="{ 'is-invalid': submitted && f.address.errors }">
+          <div class="invalid-feedback" *ngIf="submitted && f.address.invalid">
+            <div *ngIf="f.address.errors.required">
+              Este campo es requerido
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-lg btn-block" type="submit">Save</button>
+      </form>
+    </div>
+  </div>
+</div>
